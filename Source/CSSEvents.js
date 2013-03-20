@@ -7,6 +7,8 @@ license: MIT-style
 authors:
 - Amadeus Demarzi (http://enmassellc.com/)
 
+- updated by Brushed, for better minimization
+
 requires:
  core/1.3: [Core/Core, Core/Event, Core/Element.Event, Core/String]
 
@@ -14,37 +16,34 @@ provides: [Element.Events.transitionstart, Element.Events.transitionend, Element
 ...
 */
 
-(function(){
+/*
+Example:
+	Events.addNativeEvent('TransitionEnd');
+    Events.addNativeEvent('TransitionStart','TransitionEnd','AnimationStart','AnimationIteration','AnimationEnd');
 
-var prefix =
-	(Browser.safari || Browser.chrome || Browser.Platform.ios) ? 'webkit' :
-	(Browser.opera) ? 'o' :
-	(Browser.ie) ? 'ms' : '';
+*/
+(function(css3){
 
-var eventTypes = [
-	'transitionStart',
-	'transitionEnd',
-	'animationStart',
-	'animationIteration',
-	'animationEnd'
-];
+var B = Browser,
+	pfx = B.cssprefix = (B.safari || B.chrome || B.Platform.ios) ? 'webkit' : (B.opera) ? 'o' : (B.ie) ? 'ms' : '';
 
-var fn = function(eventType){
+	for ( style in css3 ){
 
-	Element.NativeEvents[eventType.toLowerCase()] = 2;
+		var eventType = css3[style],
+			type = eventType.toLowerCase(),
+			aType = pfx ? pfx + eventType : type,
+			aTest = pfx ? pfx + style.capitalize() : style;
 
-	var customType = eventType;
-	
-	if (prefix) customType = prefix + customType.capitalize();
-	else customType = customType.toLowerCase();
+		if( document.createElement('div').style[ aTest ] != null ){
 
-	Element.NativeEvents[customType] = 2;
+			Element.NativeEvents[type] = Element.NativeEvents[aType] = 2;
+			Element.Events[type] = { base: aType };
 
-	Element.Events[eventType.toLowerCase()] = {
-		base: customType
-	};
-};
+		}
 
-eventTypes.each(fn, this);
+		//console.log(Element.NativeEvents, Element.Events);
 
-})();
+	}
+
+})({transition:'TransitionEnd'});
+//})({transition:'TransitionStart',transition:'TransitionEnd',animation:'AnimationStart',animation:'AnimationIteration',animation:'AnimationEnd');
