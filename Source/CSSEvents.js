@@ -14,12 +14,6 @@ requires:
 
 provides: [Element.Events.transitionstart, Element.Events.transitionend, Element.Events.animationstart, Element.Events.animationend, Element.Events.animationiteration]
 ...
-*/
-
-/*
-Example:
-	Events.addNativeEvent('TransitionEnd');
-    Events.addNativeEvent('TransitionStart','TransitionEnd','AnimationStart','AnimationIteration','AnimationEnd');
 
 */
 (function(css3){
